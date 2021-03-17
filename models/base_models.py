@@ -8,11 +8,12 @@ from torch import nn
 from torch.nn import init
 from torch.nn import functional as F
 from transformers import AlbertModel, AlbertTokenizer, BertTokenizer, BertModel
+from models.hebbian_layer import OjaHebbian
 
 
 class TransformerClsModel(nn.Module):
 
-    def __init__(self, model_name, n_classes, max_length, device):
+    def __init__(self, model_name, n_classes, max_length, device, hebbian=0):
         super(TransformerClsModel, self).__init__()
         self.n_classes = n_classes
         self.max_length = max_length
@@ -25,7 +26,7 @@ class TransformerClsModel(nn.Module):
             self.encoder = BertModel.from_pretrained('bert-base-uncased')
         else:
             raise NotImplementedError
-        self.linear = nn.Linear(768, n_classes)
+        self.linear = nn.Linear(768, n_classes) if hebbian == 0 else OjaHebbian(768*hebbian, n_classes)
         self.to(self.device)
 
     def encode_text(self, text):

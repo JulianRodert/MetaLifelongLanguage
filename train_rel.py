@@ -41,7 +41,11 @@ if __name__ == '__main__':
     parser.add_argument('--order', type=int, help='Number of task orders to run for', default=5)
     parser.add_argument('--num_clusters', type=int, help='Number of clusters to take', default=10)
     parser.add_argument('--replay_every', type=int, help='Number of data points between replay', default=1600)
+    parser.add_argument('--hebbian', type=int, help='Use Hebbian Plasticity layer, argument acts to scale size of '
+                                                    'layer, 0 use Linear', default=0)
+    parser.add_argument('--force_cpu', type=bool, help='Force CPU computation (False)', default=False)
     args = parser.parse_args()
+
     logger.info('Using configuration: {}'.format(vars(args)))
 
     # Set random seed
@@ -65,14 +69,17 @@ if __name__ == '__main__':
 
     # Load GloVe vectors
     logger.info('Loading GloVe vectors')
-    glove = torchtext.vocab.GloVe(name='6B', dim=300, cache='gdrive/My Drive/project_files/vector_cache')
+    glove = torchtext.vocab.GloVe(name='6B', dim=300, cache='../data/vector_cache')
+    #, cache='gdrive/My Drive/project_files/vector_cache')
     logger.info('Finished loading GloVe vectors')
 
     # Get relation embeddings for clustering
     relation_embeddings = datasets.utils.get_relation_embedding(relation_names, glove)
 
     # Set the device
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    use_cuda = torch.cuda.is_available() and not args.force_cpu
+    device = torch.device('cuda' if use_cuda else 'cpu')
+    logger.info('Compute using cuda:' + str(use_cuda))
 
     # Generate clusters
     relation_index = datasets.utils.get_relation_index(train_data)

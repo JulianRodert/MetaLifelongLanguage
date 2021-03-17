@@ -31,7 +31,8 @@ class MAML:
         self.pn = TransformerClsModel(model_name=kwargs.get('model'),
                                       n_classes=1,
                                       max_length=kwargs.get('max_length'),
-                                      device=device)
+                                      device=device,
+                                      hebbian=kwargs.get('hebbian'))
 
         logger.info('Loaded {} as PN'.format(self.pn.__class__.__name__))
 

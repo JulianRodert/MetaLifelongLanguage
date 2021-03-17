@@ -25,7 +25,8 @@ class Baseline:
         self.model = TransformerClsModel(model_name=kwargs.get('model'),
                                          n_classes=1,
                                          max_length=kwargs.get('max_length'),
-                                         device=device)
+                                         device=device,
+                                         hebbian=kwargs.get('hebbian'))
         params = [p for p in self.model.parameters() if p.requires_grad]
         self.optimizer = AdamW(params, lr=self.lr)
 

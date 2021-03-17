@@ -27,7 +27,8 @@ class Replay:
         self.model = TransformerClsModel(model_name=kwargs.get('model'),
                                          n_classes=1,
                                          max_length=kwargs.get('max_length'),
-                                         device=device)
+                                         device=device,
+                                         hebbian=kwargs.get('hebbian'))
         self.memory = ReplayMemory(write_prob=self.write_prob, tuple_size=3)
         logger.info('Loaded {} as the model'.format(self.model.__class__.__name__))
 

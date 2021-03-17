@@ -24,7 +24,8 @@ class Baseline:
         self.model = TransformerClsModel(model_name=kwargs.get('model'),
                                          n_classes=n_classes,
                                          max_length=kwargs.get('max_length'),
-                                         device=device)
+                                         device=device,
+                                         hebbian=kwargs.get('hebbian'))
         logger.info('Loaded {} as model'.format(self.model.__class__.__name__))
         self.loss_fn = nn.CrossEntropyLoss()
         self.optimizer = AdamW([p for p in self.model.parameters() if p.requires_grad], lr=self.lr)
